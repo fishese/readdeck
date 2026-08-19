@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>ReadDeck</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">LOCAL-FIRST READER</div>
+      <h1>ReadDeck</h1>
+      <p>Your saved pages stay on this device unless you export or back them up.</p>
+    </div>
+    <div class="header-actions">
+      <label class="button primary" for="htmlImport">Import HTML</label>
+      <input id="htmlImport" type="file" accept="text/html,.html,.htm" multiple hidden>
+      <button id="openSettings">Backup & restore</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="libraryView">
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Search title, site, tags or text…" autocomplete="off">
+        <select id="filter">
+          <option value="active">Library</option>
+          <option value="archived">Archived</option>
+          <option value="all">All</option>
+        </select>
+      </div>
+      <div id="emptyState" class="empty" hidden>
+        <h2>Your reading deck is empty</h2>
+        <p>Import a saved HTML page (including a SingleFile export) to start. A browser capture extension can be added later.</p>
+      </div>
+      <div id="cards" class="cards" aria-live="polite"></div>
+    </section>
+
+    <article id="readerView" class="reader" hidden>
+      <button id="backToLibrary" class="link-button">← Library</button>
+      <div class="reader-head">
+        <div>
+          <div id="readerSite" class="eyebrow"></div>
+          <h1 id="readerTitle"></h1>
+          <div id="readerMeta" class="muted"></div>
+        </div>
+        <div class="reader-actions">
+          <button id="openOriginal">Original</button>
+          <button id="editTags">Tags</button>
+          <button id="exportHtml">Export HTML</button>
+          <button id="printArticle">Print / PDF</button>
+          <button id="archiveArticle"></button>
+          <button id="deleteArticle" class="danger">Delete</button>
+        </div>
+      </div>
+      <div id="readerTags" class="tags"></div>
+      <div id="readerContent" class="reader-content"></div>
+    </article>
+  </main>
+
+  <dialog id="settingsDialog">
+    <form method="dialog" class="dialog-card">
+      <div class="dialog-head">
+        <div>
+          <div class="eyebrow">PORTABLE LIBRARY</div>
+          <h2>Backup & restore</h2>
+        </div>
+        <button value="cancel" aria-label="Close">✕</button>
+      </div>
+      <p>Backups contain your locally saved articles and metadata. Keep them private if they include member-only content.</p>
+      <div class="stack">
+        <button id="downloadBackup" type="button" class="primary">Download backup</button>
+        <label class="button" for="restoreFile">Restore backup</label>
+        <input id="restoreFile" type="file" accept="application/json,.json,.readdeck" hidden>
+      </div>
+      <div class="notice">
+        <strong>Google Drive backup</strong>
+        <p>The app is structured for Drive <code>appDataFolder</code>; OAuth setup will be added as the next integration so no secret needs to be committed here.</p>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
