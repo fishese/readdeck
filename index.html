@@ -8,6 +8,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -76,6 +77,12 @@
       <p>Backups contain your locally saved articles and metadata. Keep them private if they include member-only content.</p>
 
       <section class="settings-section">
+        <h3>Device storage</h3>
+        <p id="storageStatus" class="muted small" role="status">Checking persistent storage…</p>
+        <button id="requestPersistentStorage" type="button">Request persistent storage</button>
+      </section>
+
+      <section class="settings-section">
         <h3>Backup file</h3>
         <p class="muted">Download a portable <code>.readdeck</code> file or restore one from another device.</p>
         <div class="stack">
@@ -90,7 +97,7 @@
         <p>Back up to Drive's private <code>appDataFolder</code>. ReadDeck requests only the app-data scope and does not store a client secret or Google refresh token.</p>
         <label class="field-label" for="googleClientId">Google OAuth web client ID</label>
         <input id="googleClientId" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="1234567890-…apps.googleusercontent.com">
-        <p class="muted small">The client ID identifies your web app; it is stored only in this browser. Add this site's origin to the OAuth client's authorized JavaScript origins.</p>
+        <p class="muted small">A GitHub Pages deployment can preconfigure this value from the <code>GOOGLE_OAUTH_CLIENT_ID</code> Actions secret. You can still override it locally for testing.</p>
         <div class="stack">
           <button id="driveBackup" type="button" class="primary" disabled>Back up to Google Drive</button>
           <button id="driveRestore" type="button" disabled>Restore from Google Drive</button>
@@ -100,6 +107,7 @@
     </form>
   </dialog>
 
+  <script type="module" src="storage.js"></script>
   <script type="module" src="app.js"></script>
 </body>
 </html>
