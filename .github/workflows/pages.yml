@@ -32,7 +32,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p _site
-          cp index.html styles.css app.js db.js backup.js drive.js storage.js sw.js config.js manifest.webmanifest icon.svg _site/
+          cp index.html styles.css app.js db.js backup.js drive.js storage.js sw.js config.js manifest.webmanifest icon.svg readdeck.user.js _site/
           touch _site/.nojekyll
 
           # Package the Chromium extension so the deployed app can offer a direct download.
