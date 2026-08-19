@@ -1,4 +1,5 @@
 const $=id=>document.getElementById(id);
+const DEFAULT_READDECK_URL='https://keep.fishese.cc/';
 
 function normalizeUrl(value){
   const url=new URL(value.trim());
@@ -11,7 +12,7 @@ function originPattern(value){return `${new URL(value).origin}/*`;}
 
 async function load(){
   const settings=await chrome.storage.local.get({readdeckUrl:'',fullArchive:false,lastCaptureError:''});
-  $('readdeckUrl').value=settings.readdeckUrl;
+  $('readdeckUrl').value=settings.readdeckUrl||DEFAULT_READDECK_URL;
   $('fullArchive').checked=settings.fullArchive;
   if(settings.lastCaptureError)$('status').textContent=`Last capture error: ${settings.lastCaptureError}`;
 }
