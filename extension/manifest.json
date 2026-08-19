@@ -1,14 +1,12 @@
 {
   "manifest_version": 3,
   "name": "ReadDeck Capture",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Save the current rendered page to your local ReadDeck library.",
   "permissions": ["activeTab", "scripting", "storage"],
   "optional_permissions": ["pageCapture"],
-  "optional_host_permissions": [
-    "https://*/*",
-    "http://localhost/*",
-    "http://127.0.0.1/*"
+  "host_permissions": [
+    "https://keep.fishese.cc/*"
   ],
   "background": {
     "service_worker": "service-worker.js"
