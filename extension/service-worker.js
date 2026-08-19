@@ -1,4 +1,5 @@
 const MAX_MHTML_BYTES=16*1024*1024;
+const READDECK_URL='https://keep.fishese.cc/';
 
 function normalizeOriginPattern(value){
   const url=new URL(value);
@@ -46,6 +47,15 @@ async function blobToBase64(blob){
   return btoa(binary);
 }
 
+async function ensurePageCapturePermission(){
+  if(await chrome.permissions.contains({permissions:['pageCapture']}))return true;
+  try{return await chrome.permissions.request({permissions:['pageCapture']});}
+  catch(error){
+    console.warn('ReadDeck pageCapture permission request failed',error);
+    return false;
+  }
+}
+
 async function captureArchive(tabId,enabled){
   if(!enabled)return null;
   const allowed=await chrome.permissions.contains({permissions:['pageCapture']});
@@ -72,7 +82,7 @@ async function waitForComplete(tabId){
 
 async function deliverCapture(readdeckUrl,payload){
   const pattern=normalizeOriginPattern(readdeckUrl);
-  if(!await chrome.permissions.contains({origins:[pattern]}))throw new Error('ReadDeck site permission is missing. Open extension options and save the URL again.');
+  if(!await chrome.permissions.contains({origins:[pattern]}))throw new Error('ReadDeck site permission is missing. Reload the extension and try again.');
   const nonce=crypto.randomUUID();
   const targetUrl=new URL(readdeckUrl);
   targetUrl.hash=`readdeck-capture=${encodeURIComponent(nonce)}`;
@@ -101,13 +111,16 @@ async function badge(text,color){
 
 chrome.action.onClicked.addListener(async tab=>{
   try{
-    const settings=await chrome.storage.local.get({readdeckUrl:'',fullArchive:false});
-    if(!settings.readdeckUrl){await chrome.runtime.openOptionsPage();await badge('!','#dc2626');return;}
+    const settings=await chrome.storage.local.get({readdeckUrl:READDECK_URL,fullArchive:false});
+    const readdeckUrl=settings.readdeckUrl||READDECK_URL;
     if(!tab?.id||!/^https?:/i.test(tab.url||''))throw new Error('This page cannot be captured by ReadDeck.');
+
+    if(settings.fullArchive)await ensurePageCapturePermission();
+
     const [{result}]=await chrome.scripting.executeScript({target:{tabId:tab.id},func:captureRenderedArticle});
     if(!result?.html)throw new Error('No readable page content was found.');
     result.archive=await captureArchive(tab.id,settings.fullArchive);
-    await deliverCapture(settings.readdeckUrl,result);
+    await deliverCapture(readdeckUrl,result);
     await badge('✓','#16a34a');
   }catch(error){
     console.error('ReadDeck capture failed',error);
