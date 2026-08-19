@@ -18,7 +18,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in app.js db.js backup.js drive.js storage.js sw.js config.js extension/service-worker.js extension/options.js; do
+          for file in app.js db.js backup.js drive.js storage.js sw.js config.js readdeck.user.js extension/service-worker.js extension/options.js; do
             node --input-type=module --check < "$file"
           done
       - name: Check JSON manifests
