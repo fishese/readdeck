@@ -14,15 +14,15 @@ function captureRenderedArticle(){
   const title=document.querySelector('meta[property="og:title"]')?.content||document.querySelector('h1')?.textContent?.trim()||document.title||'Untitled';
   const author=document.querySelector('meta[name="author"]')?.content||document.querySelector('[rel="author"]')?.textContent?.trim()||'';
   const candidates=[...document.querySelectorAll('article,main,[role="main"],.article,.post,.entry-content,.article-body,.story-body')];
-  let best=candidates.sort((a,b)=>(b.innerText||'').length-(a.innerText||'').length)[0]||document.body;
+  const best=candidates.sort((a,b)=>(b.innerText||'').length-(a.innerText||'').length)[0]||document.body;
   const clone=best.cloneNode(true);
-  clone.querySelectorAll('script,noscript,iframe,object,embed,form,input,button,textarea,select,nav,aside,footer,header,.advertisement,.advert,.ad,.ads,.cookie,.newsletter,.social-share,.related,.comments').forEach(el=>el.remove());
+  clone.querySelectorAll('script,style,noscript,iframe,object,embed,form,input,button,textarea,select,nav,aside,footer,header,.advertisement,.advert,.ad,.ads,.cookie,.newsletter,.social-share,.related,.comments').forEach(el=>el.remove());
   clone.querySelectorAll('*').forEach(el=>{
     [...el.attributes].forEach(attr=>{
       const name=attr.name.toLowerCase();
       if(name.startsWith('on')||name==='srcdoc'||name==='formaction'){el.removeAttribute(attr.name);return;}
-      if(['href','src','poster'].includes(name)){
-        if(/^javascript:/i.test(attr.value)){el.removeAttribute(attr.name);return;}
+      if(['href','src','poster','xlink:href'].includes(name)){
+        if(/^(?:javascript|vbscript|data:text\/html)/i.test(attr.value.trim())){el.removeAttribute(attr.name);return;}
         el.setAttribute(attr.name,absolute(attr.value,sourceUrl));
       }
       if(name==='srcset'){
@@ -34,7 +34,7 @@ function captureRenderedArticle(){
       }
     });
   });
-  const text=(clone.innerText||'').trim();
+  const text=(clone.textContent||'').trim();
   return {title,author,url:canonical,capturedAt:new Date().toISOString(),html:clone.innerHTML,text};
 }
 
