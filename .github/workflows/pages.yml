@@ -32,13 +32,15 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p _site
-          cp index.html styles.css app.js db.js backup.js drive.js storage.js sw.js manifest.webmanifest icon.svg _site/
+          cp index.html styles.css app.js db.js backup.js drive.js storage.js sw.js config.js manifest.webmanifest icon.svg _site/
           touch _site/.nojekyll
-          node <<'NODE'
+          if [ -n "${GOOGLE_OAUTH_CLIENT_ID:-}" ]; then
+            node <<'NODE'
           const fs = require('fs');
-          const config = { googleOAuthClientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '' };
+          const config = { googleOAuthClientId: process.env.GOOGLE_OAUTH_CLIENT_ID };
           fs.writeFileSync('_site/config.js', `window.READDECK_CONFIG = ${JSON.stringify(config)};\n`);
           NODE
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
