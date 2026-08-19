@@ -6,11 +6,12 @@ const BACKUP_NAME='readdeck-backup.json';
 const CLIENT_ID_KEY='readdeck.googleClientId';
 let gisPromise;
 
-export function getStoredGoogleClientId(){return localStorage.getItem(CLIENT_ID_KEY)||'';}
+function deployedClientId(){return String(window.READDECK_CONFIG?.googleOAuthClientId||'').trim();}
+export function getStoredGoogleClientId(){return localStorage.getItem(CLIENT_ID_KEY)||deployedClientId();}
 export function setStoredGoogleClientId(value){
   const trimmed=(value||'').trim();
-  if(trimmed)localStorage.setItem(CLIENT_ID_KEY,trimmed);else localStorage.removeItem(CLIENT_ID_KEY);
-  return trimmed;
+  if(trimmed&&trimmed!==deployedClientId())localStorage.setItem(CLIENT_ID_KEY,trimmed);else localStorage.removeItem(CLIENT_ID_KEY);
+  return trimmed||deployedClientId();
 }
 
 export function preloadGoogleIdentity(){
