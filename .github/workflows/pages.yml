@@ -34,6 +34,13 @@ jobs:
           mkdir -p _site
           cp index.html styles.css app.js db.js backup.js drive.js storage.js sw.js config.js manifest.webmanifest icon.svg _site/
           touch _site/.nojekyll
+
+          # Package the Chromium extension so the deployed app can offer a direct download.
+          (
+            cd extension
+            zip -qr ../_site/readdeck-extension.zip .
+          )
+
           if [ -n "${GOOGLE_OAUTH_CLIENT_ID:-}" ]; then
             node <<'NODE'
           const fs = require('fs');
