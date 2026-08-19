@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "ReadDeck Capture",
+  "version": "0.1.0",
+  "description": "Save the current rendered page to your local ReadDeck library.",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "optional_permissions": ["pageCapture"],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "action": {
+    "default_title": "Save to ReadDeck"
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
+  }
+}
