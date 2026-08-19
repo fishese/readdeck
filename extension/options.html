@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ReadDeck Capture settings</title>
   <style>
-    :root{font:16px/1.5 system-ui,sans-serif;color:#111827;background:#f3f4f6}body{margin:0;padding:2rem}.card{max-width:680px;margin:auto;background:white;border:1px solid #e5e7eb;border-radius:16px;padding:1.5rem;box-shadow:0 1px 3px #0001}h1{margin:.1rem 0 1rem}label{font-weight:650;display:block;margin-top:1rem}input[type=url]{width:100%;box-sizing:border-box;margin-top:.4rem;padding:.75rem;border:1px solid #cbd5e1;border-radius:10px;font:inherit}.check{display:flex;gap:.65rem;align-items:flex-start;font-weight:400}.check input{margin-top:.3rem}.muted{color:#64748b}.warning{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:.8rem;margin:.65rem 0 0}button{margin-top:1.2rem;padding:.75rem 1rem;border:0;border-radius:10px;background:#2563eb;color:white;font:inherit;cursor:pointer}#status{margin-top:.8rem;min-height:1.5em}
+    :root{font:16px/1.5 system-ui,sans-serif;color:#111827;background:#f3f4f6}body{margin:0;padding:2rem}.card{max-width:680px;margin:auto;background:white;border:1px solid #e5e7eb;border-radius:16px;padding:1.5rem;box-shadow:0 1px 3px #0001}h1{margin:.1rem 0 1rem}label{font-weight:650;display:block;margin-top:1rem}input[type=url]{width:100%;box-sizing:border-box;margin-top:.4rem;padding:.75rem;border:1px solid #cbd5e1;border-radius:10px;font:inherit;background:#f8fafc}.check{display:flex;gap:.65rem;align-items:flex-start;font-weight:400}.check input{margin-top:.3rem}.muted{color:#64748b}.warning{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:.8rem;margin:.65rem 0 0}button{margin-top:1.2rem;padding:.75rem 1rem;border:0;border-radius:10px;background:#2563eb;color:white;font:inherit;cursor:pointer}#status{margin-top:.8rem;min-height:1.5em}
   </style>
 </head>
 <body>
   <main class="card">
     <div class="muted">READDECK CAPTURE</div>
     <h1>Extension settings</h1>
-    <p>Set the address where your ReadDeck PWA is hosted. The extension requests access only to this ReadDeck origin so it can hand captured content to the app.</p>
+    <p>This build sends captures only to your ReadDeck site at <strong>keep.fishese.cc</strong>. It does not request access to every website; source pages are accessed temporarily when you click the toolbar button.</p>
 
     <label for="readdeckUrl">ReadDeck URL</label>
-    <input id="readdeckUrl" type="url" placeholder="https://example.com/readdeck/" spellcheck="false">
+    <input id="readdeckUrl" type="url" value="https://keep.fishese.cc/" readonly>
 
     <label class="check">
       <input id="fullArchive" type="checkbox">
-      <span><strong>Attach a full MHTML archive</strong><br><span class="muted">Includes page resources for better offline fidelity.</span></span>
+      <span><strong>Attach a full MHTML archive</strong><br><span class="muted">Includes page resources for better offline fidelity. Chrome will ask for this optional permission when you next click Save to ReadDeck on a page.</span></span>
     </label>
     <div class="warning">A full MHTML snapshot of a logged-in page can preserve hidden authenticated page state in addition to the visible article. Keep ReadDeck backups private. Leave this off if the cleaned reader copy is enough.</div>
 
-    <button id="save" type="button">Save settings & permissions</button>
+    <button id="save" type="button">Save settings</button>
     <div id="status" role="status" class="muted"></div>
   </main>
   <script src="options.js"></script>
