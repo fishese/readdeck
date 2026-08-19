@@ -36,7 +36,7 @@
       </div>
       <div id="emptyState" class="empty" hidden>
         <h2>Your reading deck is empty</h2>
-        <p>Import a saved HTML/SingleFile page, or use the ReadDeck browser extension to capture the page you already have open and logged in.</p>
+        <p>Import a saved HTML/SingleFile page, or install the ReadDeck userscript to save the page you already have open and logged in.</p>
       </div>
       <div id="cards" class="cards" aria-live="polite"></div>
     </section>
@@ -77,6 +77,16 @@
       <p>Backups contain your locally saved articles and metadata. Keep them private if they include member-only content.</p>
 
       <section class="settings-section">
+        <h3>Browser capture</h3>
+        <p class="muted">The userscript is the recommended capture method for Chrome and Firefox. The Chromium extension adds optional full-page MHTML archives.</p>
+        <div class="stack">
+          <a class="button primary" href="readdeck.user.js">Install userscript</a>
+          <a class="button" href="readdeck-extension.zip" download>Download Chromium extension</a>
+        </div>
+        <p class="muted small">Use the userscript with Tampermonkey or Violentmonkey, then choose <strong>Save this page to ReadDeck</strong> from the userscript manager menu.</p>
+      </section>
+
+      <section class="settings-section">
         <h3>Device storage</h3>
         <p id="storageStatus" class="muted small" role="status">Checking persistent storage…</p>
         <button id="requestPersistentStorage" type="button">Request persistent storage</button>
@@ -97,7 +107,7 @@
         <p>Back up to Drive's private <code>appDataFolder</code>. ReadDeck requests only the app-data scope and does not store a client secret or Google refresh token.</p>
         <label class="field-label" for="googleClientId">Google OAuth web client ID</label>
         <input id="googleClientId" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="1234567890-…apps.googleusercontent.com">
-        <p class="muted small">A GitHub Pages deployment can preconfigure this value from the <code>GOOGLE_OAUTH_CLIENT_ID</code> Actions secret. You can still override it locally for testing.</p>
+        <p class="muted small">A GitHub Pages deployment can preconfigure this value from the <code>GOOGLE_OAUTH_CLIENT_ID</code> Actions variable. You can still override it locally for testing.</p>
         <div class="stack">
           <button id="driveBackup" type="button" class="primary" disabled>Back up to Google Drive</button>
           <button id="driveRestore" type="button" disabled>Restore from Google Drive</button>
