@@ -11,12 +11,12 @@ function host(url=''){try{return new URL(url).hostname.replace(/^www\./,'');}cat
 function safeFilename(value='article'){return value.replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'')||'article';}
 
 function stripUnsafe(root){
-  root.querySelectorAll('script,noscript,iframe,object,embed,form,input,button,textarea,select,link[rel="preload"],link[rel="prefetch"]').forEach(el=>el.remove());
+  root.querySelectorAll('script,style,noscript,iframe,object,embed,form,input,button,textarea,select,link[rel="preload"],link[rel="prefetch"]').forEach(el=>el.remove());
   root.querySelectorAll('*').forEach(el=>{
     [...el.attributes].forEach(a=>{
       const name=a.name.toLowerCase();
       if(name.startsWith('on')||name==='srcdoc'||name==='formaction'){el.removeAttribute(a.name);return;}
-      if(['src','href','poster'].includes(name)&&/^javascript:/i.test(a.value))el.removeAttribute(a.name);
+      if(['src','href','poster','xlink:href'].includes(name)&&/^(?:javascript|vbscript|data:text\/html)/i.test(a.value.trim()))el.removeAttribute(a.name);
     });
   });
 }
@@ -47,8 +47,11 @@ function absolutize(root,base){
 
 function metadata(doc,file){
   const canonicalRaw=doc.querySelector('link[rel="canonical"]')?.getAttribute('href')||doc.querySelector('meta[property="og:url"]')?.content||'';
-  let canonical=canonicalRaw;
-  try{canonical=new URL(canonicalRaw,doc.querySelector('base[href]')?.href||location.href).href;}catch{}
+  let canonical='';
+  if(canonicalRaw){
+    canonical=canonicalRaw;
+    try{canonical=new URL(canonicalRaw,doc.querySelector('base[href]')?.href||location.href).href;}catch{}
+  }
   const title=doc.querySelector('meta[property="og:title"]')?.content||doc.querySelector('h1')?.textContent?.trim()||doc.title||file.name.replace(/\.html?$/i,'');
   const author=doc.querySelector('meta[name="author"]')?.content||doc.querySelector('[rel="author"]')?.textContent?.trim()||'';
   return {canonical,title,author};
@@ -61,7 +64,7 @@ async function importHtml(file){
   const base=meta.canonical||doc.querySelector('base[href]')?.href||location.href;
   const content=pickContent(doc);
   absolutize(content,base);
-  const text=(content.innerText||'').trim();
+  const text=(content.textContent||'').trim();
   const article={
     id:uid(),title:meta.title||'Untitled',author:meta.author,url:meta.canonical||'',site:host(meta.canonical),
     savedAt:new Date().toISOString(),archived:false,tags:[],contentHtml:content.innerHTML,textContent:text,
@@ -95,7 +98,7 @@ async function receiveCapture(event){
   container.innerHTML=payload.html;
   stripUnsafe(container);
   absolutize(container,payload.url||location.href);
-  const text=(container.innerText||payload.text||'').trim();
+  const text=(container.textContent||payload.text||'').trim();
   const article={
     id:uid(),
     title:String(payload.title||'Untitled').trim()||'Untitled',
@@ -172,7 +175,8 @@ function base64ToBlob(base64,type){const binary=atob(base64);const bytes=new Uin
 
 async function exportCurrentHtml(){
   const a=await getArticle(state.currentId);if(!a)return;
-  const html=`<!doctype html><meta charset="utf-8"><title>${escapeHtml(a.title)}</title><style>body{max-width:800px;margin:3rem auto;padding:0 1rem;font:18px/1.65 Georgia,serif}img{max-width:100%;height:auto}</style><h1>${escapeHtml(a.title)}</h1>${a.contentHtml}`;
+  const content=document.createElement('div');content.innerHTML=a.contentHtml;stripUnsafe(content);
+  const html=`<!doctype html><meta charset="utf-8"><title>${escapeHtml(a.title)}</title><style>body{max-width:800px;margin:3rem auto;padding:0 1rem;font:18px/1.65 Georgia,serif}img{max-width:100%;height:auto}</style><h1>${escapeHtml(a.title)}</h1>${content.innerHTML}`;
   download(`${safeFilename(a.title)}.html`,new Blob([html],{type:'text/html'}));
 }
 async function downloadCurrentArchive(){
