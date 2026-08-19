@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in app.js db.js backup.js drive.js storage.js sw.js config.js extension/service-worker.js extension/options.js; do
+            node --input-type=module --check < "$file"
+          done
+      - name: Check JSON manifests
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8')); JSON.parse(require('fs').readFileSync('extension/manifest.json','utf8'));"
