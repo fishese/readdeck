@@ -35,7 +35,7 @@
       </div>
       <div id="emptyState" class="empty" hidden>
         <h2>Your reading deck is empty</h2>
-        <p>Import a saved HTML page (including a SingleFile export) to start. A browser capture extension can be added later.</p>
+        <p>Import a saved HTML/SingleFile page, or use the ReadDeck browser extension to capture the page you already have open and logged in.</p>
       </div>
       <div id="cards" class="cards" aria-live="polite"></div>
     </section>
@@ -52,12 +52,14 @@
           <button id="openOriginal">Original</button>
           <button id="editTags">Tags</button>
           <button id="exportHtml">Export HTML</button>
+          <button id="downloadArchive" hidden>Download MHTML</button>
           <button id="printArticle">Print / PDF</button>
           <button id="archiveArticle"></button>
           <button id="deleteArticle" class="danger">Delete</button>
         </div>
       </div>
       <div id="readerTags" class="tags"></div>
+      <div id="readerArchiveStatus" class="archive-status muted" hidden></div>
       <div id="readerContent" class="reader-content"></div>
     </article>
   </main>
@@ -72,15 +74,29 @@
         <button value="cancel" aria-label="Close">✕</button>
       </div>
       <p>Backups contain your locally saved articles and metadata. Keep them private if they include member-only content.</p>
-      <div class="stack">
-        <button id="downloadBackup" type="button" class="primary">Download backup</button>
-        <label class="button" for="restoreFile">Restore backup</label>
-        <input id="restoreFile" type="file" accept="application/json,.json,.readdeck" hidden>
-      </div>
-      <div class="notice">
-        <strong>Google Drive backup</strong>
-        <p>The app is structured for Drive <code>appDataFolder</code>; OAuth setup will be added as the next integration so no secret needs to be committed here.</p>
-      </div>
+
+      <section class="settings-section">
+        <h3>Backup file</h3>
+        <p class="muted">Download a portable <code>.readdeck</code> file or restore one from another device.</p>
+        <div class="stack">
+          <button id="downloadBackup" type="button" class="primary">Download backup</button>
+          <label class="button" for="restoreFile">Restore backup</label>
+          <input id="restoreFile" type="file" accept="application/json,.json,.readdeck" hidden>
+        </div>
+      </section>
+
+      <section class="settings-section drive-section">
+        <h3>Google Drive</h3>
+        <p>Back up to Drive's private <code>appDataFolder</code>. ReadDeck requests only the app-data scope and does not store a client secret or Google refresh token.</p>
+        <label class="field-label" for="googleClientId">Google OAuth web client ID</label>
+        <input id="googleClientId" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="1234567890-…apps.googleusercontent.com">
+        <p class="muted small">The client ID identifies your web app; it is stored only in this browser. Add this site's origin to the OAuth client's authorized JavaScript origins.</p>
+        <div class="stack">
+          <button id="driveBackup" type="button" class="primary" disabled>Back up to Google Drive</button>
+          <button id="driveRestore" type="button" disabled>Restore from Google Drive</button>
+        </div>
+        <p id="driveStatus" class="muted small" role="status">Loading Google authorization…</p>
+      </section>
     </form>
   </dialog>
 
